@@ -29,3 +29,11 @@ son satırl CgroupDriver eklenir.
  kubectl taint nodes --all node-role.kubernetes.io/master-
 
 
+3.  bir deployu edit etmek hk. 
+
+root@deb1:~# kubectl get deployment -A
+NAMESPACE     NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   coredns   2/2     2            2           21h
+
+kubectl -n kube-system edit deployment coredns
+
