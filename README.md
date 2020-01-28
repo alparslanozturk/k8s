@@ -24,3 +24,8 @@ son satırl CgroupDriver eklenir.
 
 
 
+2. master rolu kaldirilmasi hk. 
+
+ kubectl taint nodes --all node-role.kubernetes.io/master-
+
+
