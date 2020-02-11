@@ -1,0 +1,100 @@
+ref: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+ref: 
+
+
+1. Sunucularda  "Public" ve "Private" ethernet tanımlamak. 
+2. ufw yada iptables ayarlari ve public ip secimi : 192.168.0.0/16 
+3. Disable swap
+4. /etc/hosts file private ip adreslerinin tanımlı olması! kube-master kube-worker1 ...
+5. install ebtables ethtool 
+6. remote docker docker-engine docker.io eski paketler. .
+
+7. apt install apt-transport-https ca-certificates curl software-properties-common
+8. add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+9. apt install docker-ce
+10. usermod -aG docker msrs
+
+
+debian: 
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt update
+sudo apt install -y kubelet kubeadm kubectl
+
+centos: 
+cat <<eof > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+      https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+eof
+setenforce 0
+yum install -y kubelet kubeadm kubectl
+systemctl enable kubelet && systemctl start kubelet
+
+
+11. kubeadm init  --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=<private IP>
+12. 
+
+    a) kubectl apply -f https://docs.projectcalico.org/v2.6/getting-started/kubernetes/installation/hosted/kubeadm/1.6/calico.yaml
+    b) flannel 
+
+
+13. kubeadm join --token <some-token> kube-master:6443 --discovery-token-ca-cert-hash sha256:<some-sha256-hash>
+
+
+14. deploy: 
+
+kubectl create deployment nginx --image=nginx
+kubectl get deployments
+
+15. service:
+
+kubectl create service nodeport nginx --tcp=80:80
+kubectl get svc
+
+curl -i url:port???
+
+
+
+sonuc: 
+
+1. node çıkarma...
+kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
+kubectl delete node <node name>
+
+2. kubeadmin reset  ( tüm ayarları temizlemek ....)
+
+3. kubectl create -f https://git.io/kube-dashboard   ( dashboard yüklemek için )
+
+4. kubectl edit services kubernetes-dashboard --namespace=kube-system
+clusterip yerine nodeport yapılabilir. 
+
+kind: Service
+apiVersion: v1
+metadata:
+ name: kubernetes-dashboard-msrs
+ namespace: kube-system
+ labels:
+  k8s-app: kubernetes-dashboard-msrs
+spec:
+ ports:
+  - protocol: TCP
+    port: 443
+    nodePort: 32443
+    targetPort: 8443
+ selector:
+  k8s-app: kubernetes-dashboard
+ type: NodePort
+
+
+
+
+
+Sorun giderme: 
+
+1. 
