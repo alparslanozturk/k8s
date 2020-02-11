@@ -1,5 +1,5 @@
 ref: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
-ref: 
+
 
 
 1. Sunucularda  "Public" ve "Private" ethernet tanımlamak. 
