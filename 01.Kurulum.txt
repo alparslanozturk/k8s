@@ -105,3 +105,10 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 
 kubeadm token list
 
+3. kurulum sonrası coredns problemi için 
+
+ kubectl edit cm coredns -n kube-system
+ 
+ ->>> delete loop line
+ 
+ 
