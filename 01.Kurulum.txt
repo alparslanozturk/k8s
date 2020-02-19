@@ -112,3 +112,14 @@ kubeadm token list
  ->>> delete loop line
  
  
+  kubectl create secret generic regcred --from-file=.dockerconfigjson=/var/lib/jenkins/.docker/config.json --type=kuberntes.io/dockerconfigjson
+
+ cp /etc/mhrs/mhrs12-ca.cer /...
+ 
+[jenkins@mhrstest04 ~]$ ls -alh /etc/docker/certs.d/resitry.mhrs.gov.tr/
+total 4.0K
+drwxr-xr-x 2 root root   33 Feb 19 14:11 .
+drwxr-xr-x 3 root root   33 Feb 19 14:10 ..
+-rw-r--r-- 1 root root 1.3K Feb 19 14:11 docker_registry.crt
+
+
